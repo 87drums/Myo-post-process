@@ -151,29 +151,15 @@ def identical_com(filehead, fol, file_num):
     print(result_ave)
     return result_ave
 
-def write_detail(filehead, filename, min_times, min):
-    rfn = open(filehead + filename, "r") #read file name
-    content = rfn.read()
-    rfn.close()
-
-    segcontent = content.split("\n")
-
-    for i, row in enumerate(segcontent):
-        if row == "$data":
-            data_num = i + 1
-            break
-
-    segcontent2 = []
-    for row in segcontent[data_num:]:
-        if row == "":
-            break
-        segcontent2.append(row.split(","))
-
 if __name__ == "__main__":
 #別の動作同士の比較
     filehead = "../20180930_some_move/"
     fol1 = filehead + "1/target/2/segdata/1/" #target motion
     fol2 = filehead + "1/other/2/"
+
+    result_fname = fol1 + " vs " + fol2
+
+    wfn = open(filehead + result_fname + ".txt", "w")
 
     #ラベル情報読み込み
     end_inf = lr.lr(fol2)
@@ -183,6 +169,7 @@ if __name__ == "__main__":
         fol = fol2 + "segdata/" + str(i+1) + "/" #compare motions
 
         print(fol1, "and", fol)
+        wfn.write(fol1, "and", fol, "\n")
 
         calc_times = 0
         min_times = 0
@@ -194,6 +181,7 @@ if __name__ == "__main__":
 
         calc_times, min_times, min, end_flag, result = different_com(filehead, fol1, fol, min_times, min_times, min, end_flag)
         print(result)
+        wfn.write(result, "\n")
 
     """
     filehead = "../20180930_some_move/1/basis/" #各動作が収納されているフォルダ指定

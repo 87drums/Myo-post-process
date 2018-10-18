@@ -72,7 +72,7 @@ def calc_sim(fh, fn1, fn2, fn, calc_times):
     #content1の大きさ分だけサイズを取って，シフトしていって比較するのであれば
     #ここでfor文とって，距離の最小値になったcontent2の時間を抽出？
     #処理を軽くしたかったらその時の最小値より大きくなったら計算止める処理をする？
-    dtw_result = [1,0,0] #最小値変数
+    dtw_result = [2,0,0] #最小値変数
 
     shift_ms = 100 #shift ms
     #サンプリングレート50Hz
@@ -99,7 +99,12 @@ def calc_sim(fh, fn1, fn2, fn, calc_times):
         window_e = window_s + window_l
     #content2のデータ長よりもはみ出した時の処理
     else:
-        dtw_result = [2, 0, 0] #最大距離以上の値を返す→最小値候補から除外
+        if dtw_result == [2, 0, 0]:
+            dtw_dis = dtw(content1, content2[window_s:window_e]) \
+                    / dtw_max(content1, content2[window_s:window_e])
+            dtw_result = [dtw_dis, window_s, window_e]
+        else:
+            dtw_result = [2, 0, 0] #最大距離以上の値を返す→最小値候補から除外
         end_flag = True
 
     return [dtw_result, end_flag] #各チャンネルの距離リスト
